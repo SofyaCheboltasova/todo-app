@@ -1,9 +1,13 @@
 .app__wrapper {
   height: 100vh;
   padding: 2rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-.app {
+.app__sections {
   height: 100%;
   width: 100%;
 
