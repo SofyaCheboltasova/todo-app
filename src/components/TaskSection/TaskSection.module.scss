@@ -7,6 +7,10 @@
 
   border-radius: 16px;
   text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .list {
