@@ -13,9 +13,10 @@ export default function getRemainingTime(dateEnd: Date): string {
 
   let resultTime = "";
 
-  days !== 0 ? (resultTime += `${days}d`) : "";
-  hours !== 0 ? (resultTime += `${hours}h`) : "";
-  minutes !== 0 ? (resultTime += `${minutes}m`) : "";
+  if (days > 0) resultTime += `${days}d `;
+  if (hours > 0) resultTime += `${hours}h `;
+  if (minutes > 0) resultTime += `${minutes}m `;
 
-  return resultTime;
+  return resultTime.trim() || "Less than a minute remaining";
 }
+

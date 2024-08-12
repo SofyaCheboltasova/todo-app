@@ -6,33 +6,39 @@ interface ModalProps {
   title: string;
   description: string;
   priority: string;
-  dateStart: Date;
+  status: string;
   dateEnd: Date;
   isOpen: boolean;
 }
 
 export default function Modal(props: ModalProps) {
-  const [state, setState] = useState<boolean>(props.isOpen);
+  const [isOpen, setIsOpen] = useState<boolean>(props.isOpen);
 
   function handleClick() {
-    setState(!state);
+    setIsOpen(!isOpen);
   }
 
+  const state = isOpen ? "opened" : "closed";
+
   return (
-    <div className={style[`modal_${state}`]} onClick={handleClick}>
-      <div className={style[`header_${state}`]}>
-        <h2 className={style[`title_${state}`]}>{props.title}</h2>
-        <p className={style[`description_${state}`]}>{props.description}</p>
+    <div className={`${style.modal} ${style[state]}`} onClick={handleClick}>
+      <div>
+        <h2 className={style.title}>{props.title}</h2>
+        <p className={style.description}>{props.description}</p>
       </div>
 
-      <div className={style[`info_${state}`]}>
-        <div className={style[`priority_${state}`]}>
-          Priority: {props.priority}
+      <div className={`${style.info} ${style[state]}`}>
+        <p>
+          Priority: <span className={style.priority}>{props.priority}</span>
+        </p>
+        <div>
+          Status: <span className={style.status}>{props.status}</span>
         </div>
-        <div className={style[`date_${state}`]}>
-          <div>Deadline: {props.dateEnd.toDateString()}</div>
-          <div>Expires in: {getRemainingTime(props.dateEnd)}</div>
-        </div>
+      </div>
+
+      <div className={`${style.date} ${style[state]}`}>
+        <div>Deadline: {props.dateEnd.toDateString()}</div>
+        <div>Expires in: {getRemainingTime(props.dateEnd)}</div>
       </div>
     </div>
   );
