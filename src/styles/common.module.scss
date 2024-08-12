@@ -1,14 +1,10 @@
 @import "./consts.module.scss";
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  font-size: 10px;
-
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: $color-main-dark;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -17,18 +13,18 @@
 }
 
 * {
+  font-family: Montserrat, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-size: 10px;
+
   box-sizing: border-box;
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   margin: 0;
 }
 
 h2 {
   margin: 0;
   padding: 0;
-}
-
-.title {
-  color: $color-main-dark;
-  font-size: 1.6rem;
+  font-size: 2rem;
 }
 
