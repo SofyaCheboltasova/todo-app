@@ -1,8 +1,9 @@
 import { useState } from "react";
 import style from "./Modal.module.scss";
+import common from "../../styles/common.module.scss";
 import { getRemainingTime } from "../../utils";
 
-interface ModalProps {
+export interface ModalProps {
   title: string;
   description: string;
   priority: string;
@@ -13,26 +14,41 @@ interface ModalProps {
 
 export default function Modal(props: ModalProps) {
   const [isOpen, setIsOpen] = useState<boolean>(props.isOpen);
+  const [, setIsPriorityChange] = useState<boolean>(false);
+  const [, setIsStatusChange] = useState<boolean>(false);
+  const state = isOpen ? "opened" : "closed";
 
   function handleClick() {
     setIsOpen(!isOpen);
   }
 
-  const state = isOpen ? "opened" : "closed";
+  function handlePriority() {
+    setIsPriorityChange(true);
+  }
+
+  function handleStatus() {
+    setIsStatusChange(true);
+  }
 
   return (
     <div className={`${style.modal} ${style[state]}`} onClick={handleClick}>
       <div>
-        <h2 className={style.title}>{props.title}</h2>
+        <h2 className={common.title}>{props.title}</h2>
         <p className={style.description}>{props.description}</p>
       </div>
 
       <div className={`${style.info} ${style[state]}`}>
         <p>
-          Priority: <span className={style.priority}>{props.priority}</span>
+          Priority:
+          <span className={style.priority} onClick={handlePriority}>
+            {props.priority}
+          </span>
         </p>
         <div>
-          Status: <span className={style.status}>{props.status}</span>
+          Status:
+          <span className={style.status} onClick={handleStatus}>
+            {props.status}
+          </span>
         </div>
       </div>
 
