@@ -1,0 +1,27 @@
+@import "../../styles/consts.module.scss";
+
+.taskSection {
+  height: auto;
+  width: 100%;
+  padding: 1rem;
+}
+
+.list {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.done {
+  background-color: $color-done;
+}
+
+.progress {
+  background-color: $color-progress;
+}
+
+.notStarted {
+  background-color: $color-notStarted;
+}
+
