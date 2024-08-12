@@ -1,0 +1,53 @@
+@import "../../../assets/styles/consts.module.scss";
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+
+  border-radius: 14px;
+  background-color: $color-main-light;
+
+  cursor: pointer;
+
+  &_closed {
+    width: 40rem;
+    height: 16rem;
+  }
+}
+
+.title {
+  color: $color-main-dark;
+
+  &_closed {
+    font-size: 1.6rem;
+  }
+
+  &_opened {
+    font-size: 2rem;
+  }
+}
+
+.description {
+  color: $color-secondary-dark;
+
+  &_closed {
+    font-size: 1.4rem;
+  }
+
+  &_opened {
+    font-size: 1.8rem;
+  }
+}
+
+.info {
+  &_closed {
+    width: 100%;
+
+    display: flex;
+    gap: 1rem;
+
+    font-size: 1rem;
+  }
+}
+
