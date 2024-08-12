@@ -1,5 +1,5 @@
-import TaskSection from "../components/TaskSection/TaskSection";
-import { Status } from "../entities";
+import TaskSection from "./components/TaskSection/TaskSection";
+import { Status } from "./entities";
 import style from "./App.module.scss";
 
 export default function App() {
