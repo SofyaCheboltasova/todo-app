@@ -1,6 +1,6 @@
 import style from "./Button.module.scss";
 
-import { Paths } from "../../entities/Icons";
+import { Paths } from "../../entities";
 
 interface ButtonProps {
   type?: {
