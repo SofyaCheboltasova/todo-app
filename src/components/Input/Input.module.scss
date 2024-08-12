@@ -1,0 +1,19 @@
+@import "../../assets/styles/consts.module.scss";
+
+.input {
+  width: 100%;
+  height: auto;
+  padding: 1rem;
+
+  border-radius: 14px;
+  border: 1px solid $color-secondary-dark;
+  box-shadow: -4px 17px 18px rgba(0, 0, 0, 0.03);
+
+  font-size: 1.2em;
+  color: $color-secondary-dark;
+
+  &:focus-visible {
+    outline: 1px solid $color-main-dark;
+  }
+}
+
