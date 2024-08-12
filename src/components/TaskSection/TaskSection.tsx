@@ -4,7 +4,7 @@ import { Status } from "../../entities";
 
 interface TaskSectionProps {
   title: Status;
-  modals: React.ReactElement[];
+  modals?: React.ReactElement[];
 }
 
 export default function TaskSection(props: TaskSectionProps) {
@@ -18,9 +18,9 @@ export default function TaskSection(props: TaskSectionProps) {
     <section className={`${style.taskSection} ${colorTheme}`}>
       <h2 className={common.title}>{props.title}</h2>
       <ul className={style.list}>
-        {props.modals.map((modal, index) => (
-          <li key={index}>{modal}</li>
-        ))}
+        {props.modals
+          ? props.modals.map((modal, index) => <li key={index}>{modal}</li>)
+          : "Empty list"}
       </ul>
     </section>
   );
