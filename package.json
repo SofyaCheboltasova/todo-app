@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "start": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "npx eslint src test",
@@ -52,3 +52,4 @@
     "vite": "^5.4.0"
   }
 }
+
