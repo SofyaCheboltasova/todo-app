@@ -37,10 +37,12 @@ export default function Modal(props: ModalProps) {
   }
 
   return (
-    <div
-      className={`${style.background} ${style[state]}`}
-      onClick={handleClose}
-    >
+    <>
+      <div
+        className={`${style.background} ${style[state]}`}
+        onClick={handleClose}
+      ></div>
+
       <div className={`${style.wrapper} ${style[state]}`}>
         <div>
           <h2 className={common.title}>{props.title}</h2>
@@ -67,7 +69,7 @@ export default function Modal(props: ModalProps) {
           <div>Expires in: {getRemainingTime(props.dateEnd)}</div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
