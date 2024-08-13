@@ -1,4 +1,6 @@
-@import "../../styles/common.module.scss";
+@import "../../styles/mixins.module.scss";
+@import "../../styles/consts.module.scss";
+@import "../../styles/placeholders.module.scss";
 
 .background {
   @include flex(row, 2rem, center, center);
@@ -40,14 +42,39 @@
   }
 }
 
+.header {
+  &.opened {
+    display: grid;
+    grid-template-rows: 1fr 3fr;
+    gap: 2rem;
+
+    max-height: 50%;
+  }
+  &.closed {
+    @include flex(column, 0.5rem);
+  }
+}
+
+.title {
+  &.closed {
+    font-size: 2rem;
+  }
+}
+
 .description {
   color: $color-secondary-dark;
-  font-size: 1.2rem;
+  &.closed {
+    font-size: 1.2rem;
+  }
 }
 
 .info,
 .date {
-  &.closed {
+  &.opened * {
+    font-size: 1.7rem;
+  }
+
+  &.closed * {
     @include flex(row, 1rem, space-between);
     width: 100%;
     font-size: 1rem;
@@ -55,26 +82,10 @@
 }
 
 .info {
-  flex-direction: column;
-}
-
-.priority {
-  color: red;
+  @include flex(column, 2rem, space-between);
 }
 
 .hidden {
   display: none;
-}
-
-.done {
-  background-color: $color-done;
-}
-
-.progress {
-  background-color: $color-progress;
-}
-
-.notStarted {
-  background-color: $color-notStarted;
 }
 

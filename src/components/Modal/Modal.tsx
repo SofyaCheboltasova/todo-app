@@ -1,72 +1,88 @@
 import { useState } from "react";
 
 import style from "./Modal.module.scss";
-import common from "../../styles/common.module.scss";
 
-import { getRemainingTime } from "../../utils";
+import Input from "../Input/Input";
+import Select from "../Select/Select";
+
 import { Priority, Status } from "../../entities";
+import { getRemainingTime, saveTaskToStorage } from "../../utils";
 
 export interface ModalProps {
-  title: string;
-  description: string;
+  title: string | undefined;
+  description: string | undefined;
   priority: Priority;
   status: Status;
   dateEnd: Date;
   isOpen: boolean;
-  onClose?: () => void;
+  onClose?: (savedModal: ModalProps) => void;
 }
 
 export default function Modal(props: ModalProps) {
-  const [, setIsPriorityChange] = useState<boolean>(false);
-  const [, setIsStatusChange] = useState<boolean>(false);
+  const { title, description, priority, status, dateEnd, isOpen, onClose } =
+    props;
+  const date = new Date(dateEnd);
+  const state = isOpen ? "opened" : "closed";
 
-  const state = props.isOpen ? "opened" : "closed";
+  const [currentTitle, setCurrentTitle] = useState(title || "Task");
+  const [currentDesc, setCurrentDesc] = useState(description || "Description");
+  const [currentPriority, setCurrentPriority] = useState(priority);
+  const [currentStatus, setCurrentStatus] = useState(status);
+  const [currentDate] = useState(dateEnd);
 
-  function handlePriority() {
-    setIsPriorityChange(true);
-  }
-
-  function handleStatus() {
-    setIsStatusChange(true);
-  }
-
-  function handleClose(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    if (event.target === event.currentTarget && props.onClose) {
-      props.onClose();
+  function handleModalClose(e: React.MouseEvent<HTMLElement>) {
+    if (e.target === e.currentTarget && onClose) {
+      const modal: ModalProps = {
+        title: currentTitle,
+        description: currentDesc,
+        priority: currentPriority,
+        status: currentStatus,
+        dateEnd: currentDate,
+        isOpen: false,
+      };
+      console.error(modal);
+      saveTaskToStorage(modal);
+      onClose(modal);
     }
+  }
+
+  function getClass(className: string) {
+    return `${style[className]} ${style[state]}`;
   }
 
   return (
     <>
-      <div
-        className={`${style.background} ${style[state]}`}
-        onClick={handleClose}
-      ></div>
+      {isOpen && (
+        <div
+          className={getClass("background")}
+          onClick={handleModalClose}
+        ></div>
+      )}
 
-      <div className={`${style.wrapper} ${style[state]}`}>
-        <div>
-          <h2 className={common.title}>{props.title}</h2>
-          <p className={style.description}>{props.description}</p>
+      <div className={getClass("wrapper")}>
+        <div className={getClass("header")}>
+          <Input value={currentTitle} onSubmit={setCurrentTitle} largeText />
+          <Input value={currentDesc} onSubmit={setCurrentDesc} darkText />
         </div>
 
-        <div className={style.info}>
-          <p>
-            Priority:
-            <span className={style.priority} onClick={handlePriority}>
-              {props.priority}
-            </span>
-          </p>
-          <div>
-            Status:
-            <span className={style.status} onClick={handleStatus}>
-              {props.status}
-            </span>
-          </div>
+        <div className={getClass("info")}>
+          <Select<Priority>
+            title={"Priority"}
+            defaultValue={currentPriority}
+            options={Object.values(Priority)}
+            onChange={setCurrentPriority}
+          />
+          <Select<Status>
+            title={"Status"}
+            defaultValue={currentStatus}
+            options={Object.values(Status)}
+            onChange={setCurrentStatus}
+          />
         </div>
 
-        <div className={style.date}>
-          <div>Deadline: {props.dateEnd.toDateString()}</div>
-          <div>Expires in: {getRemainingTime(props.dateEnd)}</div>
+        <div className={getClass("date")}>
+          <p>Deadline: {date.toDateString()}</p>
+          <p>Expires in: {getRemainingTime(date)}</p>
         </div>
       </div>
     </>
