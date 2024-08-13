@@ -1,4 +1,4 @@
-@import "./styles/common.module.scss";
+@import "./styles/mixins.module.scss";
 
 .app__wrapper {
   @include flex(column, 2rem);

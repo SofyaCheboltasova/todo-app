@@ -30,3 +30,29 @@ h2 {
   font-size: 2rem;
 }
 
+/** PRIORITY */
+.high {
+  color: red;
+}
+
+.medium {
+  color: yellow;
+}
+
+.low {
+  color: green;
+}
+
+/** STATUS */
+.done {
+  color: $color-done;
+}
+
+.progress {
+  color: $color-progress;
+}
+
+.notStarted {
+  color: $color-notStarted;
+}
+
