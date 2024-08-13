@@ -1,19 +1,33 @@
 @import "../../styles/consts.module.scss";
+@import "../../styles/placeholders.module.scss";
 
 .input {
   width: 100%;
-  height: auto;
+  height: 100%;
   padding: 1rem;
 
-  border-radius: 14px;
-  border: 1px solid $color-secondary-dark;
-  box-shadow: -4px 17px 18px rgba(0, 0, 0, 0.03);
+  border-radius: 5px;
+  border: 1px solid transparent;
+  background-color: $color-main-dark;
 
-  font-size: 1.2em;
-  color: $color-secondary-dark;
+  font-size: 2rem;
+  color: $color-secondary-light;
 
   &:focus-visible {
     outline: 1px solid $color-main-dark;
+    border-color: $color-secondary-dark;
   }
+
+  @extend %scroll;
+  resize: none;
+}
+
+.large {
+  font-size: 3rem;
+  font-weight: 600;
+}
+
+.dark {
+  color: $color-secondary-dark;
 }
 

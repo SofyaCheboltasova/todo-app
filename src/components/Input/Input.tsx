@@ -3,47 +3,48 @@ import { useEffect, useRef, useState } from "react";
 import style from "./Input.module.scss";
 
 interface InputProps {
-  placeholder: string;
-  handleEnterPressed: (value: string) => void;
-  short?: boolean;
-  long?: boolean;
+  value: string;
+  onSubmit: (value: string) => void;
+  largeText?: boolean;
+  darkText?: boolean;
 }
 
 export default function Input(props: InputProps) {
-  const [value, setValue] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  function handleKeyDown(e: KeyboardEvent) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      props.handleEnterPressed(value);
-    }
-  }
-
-  function handleClickOutside(e: MouseEvent) {
-    if (inputRef.current && !inputRef.current.contains(e.target as Node)) {
-      props.handleEnterPressed(value);
-    }
-  }
+  const [value, setValue] = useState(props.value);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("click", handleClickOutside);
+    const textareaElement = textareaRef.current;
+    if (textareaElement) {
+      textareaElement.addEventListener("keydown", handleKeyDown);
+    }
+  }, [value, props]);
 
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("click", handleClickOutside);
-    };
-  }, [value]);
+  function capitalizeLetter() {
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  }
+
+  function handleKeyDown(e: KeyboardEvent) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      props.onSubmit(capitalizeLetter() || props.value);
+      textareaRef.current?.blur();
+    }
+  }
+
+  function handleBlur() {
+    props.onSubmit(capitalizeLetter() || props.value);
+    textareaRef.current?.blur();
+  }
 
   return (
-    <input
-      type="text"
+    <textarea
+      ref={textareaRef}
       value={value}
-      ref={inputRef}
-      className={style.input}
-      placeholder={props.placeholder}
+      placeholder={"Start typing"}
+      className={`${style.input} ${props.largeText && style["large"]} ${props.darkText && style["dark"]}`}
       onChange={(e) => setValue(e.target.value)}
+      onBlur={handleBlur}
     />
   );
 }
