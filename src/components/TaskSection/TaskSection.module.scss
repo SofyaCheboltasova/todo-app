@@ -1,34 +1,33 @@
 @import "../../styles/consts.module.scss";
+@import "../../styles/placeholders.module.scss";
+@import "../../styles/mixins.module.scss";
 
 .taskSection {
+  @include flex(column, 2rem, $text-align: center);
+  @extend %scroll;
+
   height: auto;
   width: 100%;
-  padding: 1rem;
+  padding: 2rem;
+  border-radius: 5px;
 
-  border-radius: 16px;
-  text-align: center;
-
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  overflow: hidden scroll;
+  box-shadow: rgba(255, 255, 255, 0.3) 0 2px 3px;
 }
 
 .list {
-  display: flex;
-  gap: 1rem;
-  flex-direction: column;
-  justify-content: space-between;
+  @include flex(column, 1rem, space-between);
 }
 
 .done {
-  background-color: $color-done;
+  @include linear-shadow($color-done);
 }
 
 .progress {
-  background-color: $color-progress;
+  @include linear-shadow($color-progress);
 }
 
 .notStarted {
-  background-color: $color-notStarted;
+  @include linear-shadow($color-notStarted);
 }
 

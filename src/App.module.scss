@@ -1,18 +1,16 @@
+@import "./styles/mixins.module.scss";
+
 .app__wrapper {
+  @include flex(column, 2rem);
+
   height: 100vh;
   padding: 2rem;
-
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
 }
 
 .app__sections {
+  @include flex(row, 3rem, space-between);
+
   height: 100%;
   width: 100%;
-
-  display: flex;
-  gap: 3rem;
-  justify-content: space-between;
 }
 
