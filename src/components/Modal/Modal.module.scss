@@ -1,5 +1,4 @@
-@import "../../styles/consts.module.scss";
-@import "../../styles/mixins.module.scss";
+@import "../../styles/common.module.scss";
 
 .background {
   @include flex(row, 2rem, center, center);
@@ -19,13 +18,11 @@
 
 .wrapper {
   @include flex(column, 0, space-between);
+  @extend %box;
 
   width: 50vw;
   height: 80vh;
-  padding: 1rem;
 
-  border-radius: 14px;
-  border: 1px solid $color-secondary-dark;
   background-color: $color-main-dark;
 
   &.closed {

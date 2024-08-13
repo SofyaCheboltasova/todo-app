@@ -1,18 +1,13 @@
-@import "../../styles/consts.module.scss";
-@import "../../styles/placeholders.module.scss";
-@import "../../styles/mixins.module.scss";
+@import "../../styles/common.module.scss";
 
 .taskSection {
   @include flex(column, 2rem, $text-align: center);
+  @extend %box;
   @extend %scroll;
 
   height: auto;
   width: 100%;
-  padding: 2rem;
-  border-radius: 5px;
-
   overflow: hidden scroll;
-  box-shadow: rgba(255, 255, 255, 0.3) 0 2px 3px;
 }
 
 .list {
