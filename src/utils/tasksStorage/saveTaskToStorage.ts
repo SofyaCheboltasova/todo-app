@@ -2,9 +2,9 @@ import { ModalProps } from "../../components/Modal/Modal";
 import { Status } from "../../entities";
 
 interface TaskStorage {
-  notStarted: ModalProps[];
-  inProgress: ModalProps[];
-  done: ModalProps[];
+  [Status.done]: ModalProps[];
+  [Status.progress]: ModalProps[];
+  [Status.notStarted]: ModalProps[];
 }
 
 export default function saveTaskToStorage(task: ModalProps) {
@@ -12,20 +12,20 @@ export default function saveTaskToStorage(task: ModalProps) {
   const tasks: TaskStorage = storedTasks
     ? JSON.parse(storedTasks)
     : {
-        notStarted: [],
-        inProgress: [],
-        done: [],
+        [Status.done]: [],
+        [Status.progress]: [],
+        [Status.notStarted]: [],
       };
 
   switch (task.status) {
     case Status.notStarted:
-      tasks.notStarted.push(task);
+      tasks[Status.notStarted].push(task);
       break;
     case Status.progress:
-      tasks.inProgress.push(task);
+      tasks[Status.progress].push(task);
       break;
     case Status.done:
-      tasks.done.push(task);
+      tasks[Status.done].push(task);
       break;
     default:
       console.error("Unknown status:", task.status);

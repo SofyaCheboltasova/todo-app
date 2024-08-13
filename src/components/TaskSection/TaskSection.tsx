@@ -1,18 +1,21 @@
 import { useState } from "react";
 
 import style from "./TaskSection.module.scss";
-import common from "../../styles/common.module.scss";
 
 import { Priority, Status } from "../../entities";
 import Button from "../Button/Button";
-import Modal from "../Modal/Modal";
+import Modal, { ModalProps } from "../Modal/Modal";
 
 interface TaskSectionProps {
   title: Status;
-  modals?: React.ReactElement[];
+  modals?: ModalProps[];
 }
 
 export default function TaskSection(props: TaskSectionProps) {
+  const [currentModals, setCurrentModals] = useState<ModalProps[] | undefined>(
+    props.modals
+  );
+
   const [isModalOpened, setIsModalOpened] = useState<boolean>(false);
 
   const colorTheme = {
@@ -28,26 +31,52 @@ export default function TaskSection(props: TaskSectionProps) {
     color: { unset: true },
   };
 
+  function handleClose(savedModal: ModalProps) {
+    setIsModalOpened(false);
+
+    if (currentModals) {
+      setCurrentModals([...currentModals, savedModal]);
+    } else {
+      setCurrentModals([savedModal]);
+    }
+  }
+
+  function getModal(task: ModalProps): React.ReactElement {
+    const { title, description, priority, status, dateEnd, isOpen } = task;
+    return (
+      <Modal
+        title={title}
+        description={description}
+        priority={priority}
+        status={status}
+        dateEnd={dateEnd}
+        isOpen={isOpen}
+        onClose={handleClose}
+      />
+    );
+  }
+
+  const emptyModalProps: ModalProps = {
+    title: undefined,
+    description: undefined,
+    priority: Priority.high,
+    status: props.title,
+    dateEnd: new Date(Date.now()),
+    isOpen: true,
+  };
+
   return (
     <>
-      {isModalOpened && (
-        <Modal
-          title={""}
-          description={""}
-          priority={Priority.high}
-          status={props.title}
-          dateEnd={new Date(Date.now())}
-          isOpen={true}
-          onClose={() => setIsModalOpened(false)}
-        />
-      )}
+      {isModalOpened && getModal(emptyModalProps)}
 
       <section className={`${style.taskSection} ${colorTheme}`}>
-        <h2 className={common.title}>{props.title}</h2>
+        <h2>{props.title}</h2>
         <Button {...buttonProps} />
         <ul className={style.list}>
-          {props.modals &&
-            props.modals.map((modal, index) => <li key={index}>{modal}</li>)}
+          {currentModals &&
+            currentModals.map((modal, index) => (
+              <li key={index}>{getModal(modal)}</li>
+            ))}
         </ul>
       </section>
     </>

@@ -6,9 +6,9 @@ export default function getTasksFromStorage(props: Status): ModalProps[] {
   const parsedTasks = storedTasks
     ? JSON.parse(storedTasks)
     : {
-        todo: [],
-        inProgress: [],
-        done: [],
+        [Status.done]: [],
+        [Status.progress]: [],
+        [Status.notStarted]: [],
       };
 
   return parsedTasks[props];
