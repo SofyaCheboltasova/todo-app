@@ -1,50 +1,46 @@
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
 import style from "./TaskSection.module.scss";
 
-import { Priority, Status } from "../../entities";
-import Button from "../Button/Button";
+import Button, { ButtonProps } from "../Button/Button";
 import Modal, { ModalProps } from "../Modal/Modal";
+import { getStatusTasksFromStorage } from "../../utils";
+import { Status } from "../../entities";
 
 interface TaskSectionProps {
-  title: Status;
-  modals?: ModalProps[];
+  sectionName: Status;
+  onAddTask: (status: Status) => void;
+  onUpdate: () => void;
+  tasks?: ModalProps[];
 }
 
 export default function TaskSection(props: TaskSectionProps) {
-  const [currentModals, setCurrentModals] = useState<ModalProps[] | undefined>(
-    props.modals
-  );
-
   const [isModalOpened, setIsModalOpened] = useState<boolean>(false);
+  const [tasks, setTasks] = useState<ModalProps[] | undefined>(props.tasks);
 
-  const colorTheme = {
-    [Status.done]: style.done,
-    [Status.progress]: style.progress,
-    [Status.notStarted]: style.notStarted,
-  }[props.title];
+  useEffect(() => {
+    setTasks(props.tasks);
+  }, [props.tasks]);
 
-  const buttonProps = {
-    onClick: () => setIsModalOpened(true),
+  const addButtonProps: ButtonProps = {
     type: { add: true },
     width: { wide: true },
     color: { unset: true },
+    onClick: () => props.onAddTask(props.sectionName),
   };
 
-  function handleClose(savedModal: ModalProps) {
+  function handleClose(): void {
     setIsModalOpened(false);
-
-    if (currentModals) {
-      setCurrentModals([...currentModals, savedModal]);
-    } else {
-      setCurrentModals([savedModal]);
-    }
+    const updatedTaskList: ModalProps[] = Object.values(
+      getStatusTasksFromStorage(props.sectionName)
+    );
+    setTasks(updatedTaskList);
   }
 
-  function getModal(task: ModalProps): React.ReactElement {
-    const { title, description, priority, status, dateEnd, isOpen } = task;
+  function getModalTag(task: ModalProps): React.ReactElement<ModalProps> {
+    const { id, title, description, priority, status, dateEnd, isOpen } = task;
     return (
       <Modal
+        id={id}
         title={title}
         description={description}
         priority={priority}
@@ -52,30 +48,28 @@ export default function TaskSection(props: TaskSectionProps) {
         dateEnd={dateEnd}
         isOpen={isOpen}
         onClose={handleClose}
+        onUpdate={props.onUpdate}
       />
     );
   }
 
-  const emptyModalProps: ModalProps = {
-    title: undefined,
-    description: undefined,
-    priority: Priority.high,
-    status: props.title,
-    dateEnd: new Date(Date.now()),
-    isOpen: true,
-  };
+  const colorTheme: string = {
+    [Status.done]: style.done,
+    [Status.progress]: style.progress,
+    [Status.notStarted]: style.notStarted,
+  }[props.sectionName];
 
   return (
     <>
-      {isModalOpened && getModal(emptyModalProps)}
-
       <section className={`${style.taskSection} ${colorTheme}`}>
-        <h2>{props.title}</h2>
-        <Button {...buttonProps} />
+        <h2>{props.sectionName}</h2>
+        <Button {...addButtonProps} />
         <ul className={style.list}>
-          {currentModals &&
-            currentModals.map((modal, index) => (
-              <li key={index}>{getModal(modal)}</li>
+          {tasks &&
+            tasks.map((task) => (
+              <li key={task.id}>
+                {getModalTag({ ...task, isOpen: isModalOpened || false })}
+              </li>
             ))}
         </ul>
       </section>

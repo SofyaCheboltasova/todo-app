@@ -3,17 +3,21 @@
 @import "../../styles/placeholders.module.scss";
 
 .taskSection {
-  @include flex(column, 2rem, $text-align: center);
+  @include flex(column, 2rem);
   @extend %box;
   @extend %scroll;
 
   height: auto;
   width: 100%;
   overflow: hidden scroll;
+
+  padding: 3rem;
 }
 
 .list {
-  @include flex(column, 1rem, space-between);
+  @include flex(column, 2rem, space-between);
+  list-style-type: none;
+  padding: 0;
 }
 
 .done {
