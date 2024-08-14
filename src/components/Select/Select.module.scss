@@ -2,13 +2,8 @@
 @import "../../styles/mixins.module.scss";
 
 .label {
-  display: grid;
-  grid-template-columns: 1fr 10fr;
-  gap: 1rem;
-  align-items: center;
-
+  @include grid(1fr 10fr, 1fr, 1rem, center);
   font-weight: 600;
-  background-color: $color-main-dark;
 }
 
 .select,
@@ -16,12 +11,14 @@
   color: inherit;
   font-size: inherit;
   background-color: inherit;
+
+  cursor: pointer;
+  background-color: $color-main-dark;
 }
 
 .select {
-  border-radius: 5px;
-  padding: 1rem;
-
   width: 100%;
+  padding: 1rem;
+  border-radius: 5px;
 }
 
