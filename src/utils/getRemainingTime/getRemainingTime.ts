@@ -1,6 +1,9 @@
-export default function getRemainingTime(dateEnd: Date): string {
+import getRefactoredDate from "../getRefactoredDate/getRefactoredDate";
+
+export default function getRemainingTime(dateEnd: string): string {
+  const refactoredDate = getRefactoredDate(dateEnd);
   const now = new Date().getTime();
-  const end = dateEnd.getTime();
+  const end = new Date(refactoredDate).getTime();
   const timeDiff = end - now;
 
   if (timeDiff <= 0) {
