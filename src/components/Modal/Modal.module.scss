@@ -28,8 +28,10 @@
   background-color: $color-main-dark;
 
   &.closed {
-    width: 30rem;
-    height: 16rem;
+    @include grid(1fr, repeat(3, 1fr), 2rem);
+
+    width: 100%;
+    height: 100%;
     cursor: pointer;
   }
 
@@ -44,27 +46,11 @@
 
 .header {
   &.opened {
-    display: grid;
-    grid-template-rows: 1fr 3fr;
-    gap: 2rem;
-
+    @include grid(1fr, 1fr 3fr, 2rem);
     max-height: 50%;
   }
   &.closed {
-    @include flex(column, 0.5rem);
-  }
-}
-
-.title {
-  &.closed {
-    font-size: 2rem;
-  }
-}
-
-.description {
-  color: $color-secondary-dark;
-  &.closed {
-    font-size: 1.2rem;
+    max-height: 70%;
   }
 }
 
@@ -75,14 +61,18 @@
   }
 
   &.closed * {
-    @include flex(row, 1rem, space-between);
-    width: 100%;
-    font-size: 1rem;
+    font-size: 1.4rem;
   }
 }
 
-.info {
-  @include flex(column, 2rem, space-between);
+.info,
+.date {
+  @include flex(column, 1rem);
+
+  &.closed {
+    align-items: center;
+    width: 100%;
+  }
 }
 
 .hidden {

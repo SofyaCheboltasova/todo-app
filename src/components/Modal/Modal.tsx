@@ -1,91 +1,133 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import style from "./Modal.module.scss";
 
 import Input from "../Input/Input";
 import Select from "../Select/Select";
+import FormField from "../FormField/FormField";
 
 import { Priority, Status } from "../../entities";
-import { getRemainingTime, saveTaskToStorage } from "../../utils";
+import {
+  getRemainingTime,
+  saveTaskToStorage,
+  updateTaskInStorage,
+} from "../../utils";
 
 export interface ModalProps {
-  title: string | undefined;
-  description: string | undefined;
+  id: string;
+  title: string;
+  description: string;
   priority: Priority;
   status: Status;
-  dateEnd: Date;
+  dateEnd: string;
   isOpen: boolean;
-  onClose?: (savedModal: ModalProps) => void;
+  onClose?: () => void;
+  onUpdate?: () => void;
 }
 
 export default function Modal(props: ModalProps) {
-  const { title, description, priority, status, dateEnd, isOpen, onClose } =
-    props;
-  const date = new Date(dateEnd);
-  const state = isOpen ? "opened" : "closed";
+  const modalRef = useRef<HTMLDivElement>(null);
+  const [task, setTask] = useState<ModalProps>(props);
+  const [isOpened, setIsOpened] = useState<boolean>(props.isOpen);
+  const { onClose, onUpdate } = props;
+  const state = isOpened ? "opened" : "closed";
 
-  const [currentTitle, setCurrentTitle] = useState(title || "Task");
-  const [currentDesc, setCurrentDesc] = useState(description || "Description");
-  const [currentPriority, setCurrentPriority] = useState(priority);
-  const [currentStatus, setCurrentStatus] = useState(status);
-  const [currentDate] = useState(dateEnd);
+  useEffect(() => {
+    onUpdate && onUpdate();
+  }, [task]);
 
-  function handleModalClose(e: React.MouseEvent<HTMLElement>) {
-    if (e.target === e.currentTarget && onClose) {
-      const modal: ModalProps = {
-        title: currentTitle,
-        description: currentDesc,
-        priority: currentPriority,
-        status: currentStatus,
-        dateEnd: currentDate,
-        isOpen: false,
-      };
-      console.error(modal);
-      saveTaskToStorage(modal);
-      onClose(modal);
-    }
-  }
-
-  function getClass(className: string) {
+  function getStyleClass(className: string): string {
     return `${style[className]} ${style[state]}`;
   }
 
+  function getUpdatedTask<T>(key?: keyof ModalProps, value?: T): ModalProps {
+    return key ? { ...task, [key]: value } : task;
+  }
+
+  function handleClose(e: React.MouseEvent<HTMLElement>): void {
+    if (e.target === e.currentTarget && onClose) {
+      setIsOpened(false);
+      const updatedTask: ModalProps = getUpdatedTask();
+      saveTaskToStorage(updatedTask);
+      setTask(updatedTask);
+    }
+  }
+
+  function handleSubmit<T>(key: keyof ModalProps, value: T): void {
+    const updatedTask: ModalProps = getUpdatedTask(key, value);
+    updateTaskInStorage(updatedTask);
+    setTask(updatedTask);
+  }
+
   return (
-    <>
-      {isOpen && (
+    <div ref={modalRef}>
+      {isOpened && (
         <div
-          className={getClass("background")}
-          onClick={handleModalClose}
+          className={getStyleClass("background")}
+          onClick={handleClose}
         ></div>
       )}
 
-      <div className={getClass("wrapper")}>
-        <div className={getClass("header")}>
-          <Input value={currentTitle} onSubmit={setCurrentTitle} largeText />
-          <Input value={currentDesc} onSubmit={setCurrentDesc} darkText />
+      <div className={getStyleClass("wrapper")}>
+        <div className={getStyleClass("header")}>
+          <Input
+            value={task.title || "Add task"}
+            type="text"
+            onSubmit={(value: string) => handleSubmit("title", value)}
+            largeText={isOpened}
+          />
+          <p onClick={() => setIsOpened(true)}>Add description</p>
+          {isOpened && (
+            <Input
+              value={task.description || "Add description"}
+              type="text"
+              onSubmit={(value: string) => handleSubmit("description", value)}
+              darkText
+            />
+          )}
         </div>
 
-        <div className={getClass("info")}>
-          <Select<Priority>
-            title={"Priority"}
-            defaultValue={currentPriority}
-            options={Object.values(Priority)}
-            onChange={setCurrentPriority}
+        <div className={getStyleClass("info")}>
+          <FormField
+            label={"Priority"}
+            input={
+              <Select<Priority>
+                defaultValue={task.priority}
+                options={Object.values(Priority)}
+                onChange={(value: string) => handleSubmit("priority", value)}
+              />
+            }
           />
-          <Select<Status>
-            title={"Status"}
-            defaultValue={currentStatus}
-            options={Object.values(Status)}
-            onChange={setCurrentStatus}
+          <FormField
+            label={"Status"}
+            input={
+              <Select<Status>
+                defaultValue={task.status}
+                options={Object.values(Status)}
+                onChange={(value: string) => handleSubmit("status", value)}
+              />
+            }
           />
         </div>
 
-        <div className={getClass("date")}>
-          <p>Deadline: {date.toDateString()}</p>
-          <p>Expires in: {getRemainingTime(date)}</p>
+        <div className={getStyleClass("date")}>
+          <FormField
+            label={"Deadline"}
+            input={
+              <Input
+                value={task.dateEnd}
+                type="date"
+                onSubmit={(value: string) => handleSubmit("dateEnd", value)}
+              />
+            }
+          />
+          <FormField
+            label={"Expires in"}
+            input={getRemainingTime(task.dateEnd)}
+          />
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
