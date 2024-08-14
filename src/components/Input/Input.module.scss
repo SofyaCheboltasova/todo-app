@@ -3,8 +3,7 @@
 
 .input {
   width: 100%;
-  height: 100%;
-  padding: 1rem;
+  padding: 1rem 1rem 1rem 0;
 
   border-radius: 5px;
   border: 1px solid transparent;
@@ -13,13 +12,14 @@
   font-size: 2rem;
   color: $color-secondary-light;
 
+  @extend %scroll;
+  resize: none;
+
   &:focus-visible {
     outline: 1px solid $color-main-dark;
     border-color: $color-secondary-dark;
+    padding-left: 1rem;
   }
-
-  @extend %scroll;
-  resize: none;
 }
 
 .large {
