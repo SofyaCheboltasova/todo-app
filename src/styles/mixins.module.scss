@@ -24,3 +24,11 @@
   text-align: $text-align;
 }
 
+@mixin grid($columns: unset, $rows: 0, $gap: unset, $align-items: unset) {
+  display: grid;
+  grid-template-columns: $columns;
+  grid-template-rows: $rows;
+  gap: $gap;
+  align-items: $align-items;
+}
+

@@ -3,7 +3,7 @@ import style from "./Button.module.scss";
 import add from "../../assets/Images/Add.png";
 import search from "../../assets/Images/Search.png";
 
-interface ButtonProps {
+export interface ButtonProps {
   onClick: () => void;
   type?: {
     search?: boolean;
@@ -33,7 +33,7 @@ export default function Button(props: ButtonProps) {
     return "";
   }
 
-  const buttonClassNames = [
+  const buttonClassNames: string = [
     style.button,
     props.width?.short ? style.short : "",
     props.width?.wide ? style.wide : "",
@@ -42,7 +42,7 @@ export default function Button(props: ButtonProps) {
     props.color?.unset ? style.unset : "",
   ].join(" ");
 
-  function handleClcik(e: React.MouseEvent<HTMLButtonElement>) {
+  function handleClcik(e: React.MouseEvent<HTMLButtonElement>): void {
     e.preventDefault();
     props.onClick();
   }
