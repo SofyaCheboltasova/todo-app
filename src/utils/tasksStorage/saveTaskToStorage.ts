@@ -1,37 +1,25 @@
 import { ModalProps } from "../../components/Modal/Modal";
 import { Status } from "../../entities";
-
-interface TaskStorage {
-  [Status.done]: ModalProps[];
-  [Status.progress]: ModalProps[];
-  [Status.notStarted]: ModalProps[];
-}
+import { getAllTasksFromStorage } from "./getTasksFromStorage";
+import TaskStorage from "./TaskStorage";
 
 export default function saveTaskToStorage(task: ModalProps) {
-  const storedTasks = localStorage.getItem("tasks");
-  const tasks: TaskStorage = storedTasks
-    ? JSON.parse(storedTasks)
-    : {
-        [Status.done]: [],
-        [Status.progress]: [],
-        [Status.notStarted]: [],
-      };
+  const tasks: TaskStorage = getAllTasksFromStorage();
 
   switch (task.status) {
     case Status.notStarted:
-      tasks[Status.notStarted].push(task);
+      tasks[Status.notStarted][task.id] = task;
       break;
     case Status.progress:
-      tasks[Status.progress].push(task);
+      tasks[Status.progress][task.id] = task;
       break;
     case Status.done:
-      tasks[Status.done].push(task);
+      tasks[Status.done][task.id] = task;
       break;
     default:
       console.error("Unknown status:", task.status);
       return;
   }
-
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
