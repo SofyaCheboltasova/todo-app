@@ -56,15 +56,21 @@ export default function TaskSection(props: TaskSectionProps) {
 
   return (
     <>
-      <section className={`${style.taskSection} ${colorTheme}`}>
+      <section className={style.taskSection}>
         <h2>{sectionName}</h2>
         <Button {...addButtonProps} />
         <ul className={style.list}>
           {tasks &&
-            tasks.map((task) => <li key={task.id}>{getModalTag(task)}</li>)}
+            tasks
+              .slice()
+              .reverse()
+              .map((task) => (
+                <li key={task.id} className={`${style.modal} ${colorTheme}`}>
+                  {getModalTag(task)}
+                </li>
+              ))}
         </ul>
       </section>
     </>
   );
 }
-

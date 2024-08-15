@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import style from "./Modal.module.scss";
 
@@ -17,7 +17,6 @@ export interface ModalProps extends TaskProps {
 }
 
 export default function Modal(props: ModalProps) {
-  const modalRef = useRef<HTMLDivElement>(null);
   const [task, setTask] = useState<TaskProps>(props);
   const [isOpened, setIsOpened] = useState<boolean>(props.isOpen);
 
@@ -38,11 +37,11 @@ export default function Modal(props: ModalProps) {
     return `${style[className]} ${style[state]}`;
   }
 
-  function getUpdatedTask<T>(key?: keyof ModalProps, value?: T): TaskProps {
+  function getUpdatedTask<T>(key?: keyof TaskProps, value?: T): TaskProps {
     return key ? { ...task, [key]: value } : task;
   }
 
-  function handleSubmit<T>(key: keyof ModalProps, value: T): void {
+  function handleChange<T>(key: keyof TaskProps, value: T): void {
     const updatedTask: TaskProps = getUpdatedTask(key, value);
     putInStorage(updatedTask);
     setTask(updatedTask);
@@ -52,34 +51,37 @@ export default function Modal(props: ModalProps) {
     onDelete(task);
   }
 
-  function handleEdit(): void {
-    !isOpened && setIsOpened(true);
+  function handleOpen(): void {
+    setIsOpened(true);
+  }
+
+  function handleClose(): void {
+    setIsOpened(false);
   }
 
   return (
-    <div ref={modalRef}>
+    <>
       {isOpened && (
         <div
           className={getStyleClass("background")}
-          onClick={() => setIsOpened(false)}
+          onClick={handleClose}
         ></div>
       )}
 
       <div className={getStyleClass("wrapper")}>
         <div className={getStyleClass("header")}>
           <Input
-            value={task.title || "Add task"}
+            value={task.title || "New task"}
             type="text"
-            onSubmit={(value: string) => handleSubmit("title", value)}
+            onSubmit={(value: string) => handleChange("title", value)}
             largeText={isOpened}
+            darkText={!isOpened}
           />
-          <p onClick={() => setIsOpened(true)}>Add description</p>
           {isOpened && (
             <Input
-              value={task.description || "Add description"}
+              value={task.description || "Description"}
               type="text"
-              onSubmit={(value: string) => handleSubmit("description", value)}
-              darkText
+              onSubmit={(value: string) => handleChange("description", value)}
             />
           )}
         </div>
@@ -91,7 +93,7 @@ export default function Modal(props: ModalProps) {
               <Select<Priority>
                 defaultValue={task.priority}
                 options={Object.values(Priority)}
-                onChange={(value: string) => handleSubmit("priority", value)}
+                onChange={(value: string) => handleChange("priority", value)}
               />
             }
           />
@@ -101,7 +103,7 @@ export default function Modal(props: ModalProps) {
               <Select<Status>
                 defaultValue={task.status}
                 options={Object.values(Status)}
-                onChange={(value: string) => handleSubmit("status", value)}
+                onChange={(value: string) => handleChange("status", value)}
               />
             }
           />
@@ -114,7 +116,7 @@ export default function Modal(props: ModalProps) {
               <Input
                 value={task.dateEnd}
                 type="date"
-                onSubmit={(value: string) => handleSubmit("dateEnd", value)}
+                onSubmit={(value: string) => handleChange("dateEnd", value)}
               />
             }
           />
@@ -130,10 +132,9 @@ export default function Modal(props: ModalProps) {
             type={{ del: true }}
             onClick={handleDelete}
           />
-          <Button {...buttonProps} type={{ edit: true }} onClick={handleEdit} />
+          <Button {...buttonProps} type={{ edit: true }} onClick={handleOpen} />
         </div>
       </div>
-    </div>
+    </>
   );
 }
-

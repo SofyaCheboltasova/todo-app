@@ -14,7 +14,7 @@ const defaultTask: TaskProps = {
   dateEnd: getRefactoredDate(),
 };
 
-export default function postToStorage(status: Status): void {
+export default function postToStorage(status: Status) {
   const tasks: TaskStorage = getAllTasks();
   const task = { ...defaultTask, id: uuidv4(), status: status };
 
