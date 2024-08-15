@@ -3,13 +3,14 @@ import style from "./TaskSection.module.scss";
 
 import Button, { ButtonProps } from "../Button/Button";
 import Modal, { ModalProps } from "../Modal/Modal";
-import { getStatusTasksFromStorage } from "../../utils";
+import { getTasksByStatus } from "../../utils";
 import { Status } from "../../entities";
 
 interface TaskSectionProps {
   sectionName: Status;
   onAddTask: (status: Status) => void;
   onUpdate: () => void;
+  onDelete: (task: ModalProps) => void;
   tasks?: ModalProps[];
 }
 
@@ -31,7 +32,7 @@ export default function TaskSection(props: TaskSectionProps) {
   function handleClose(): void {
     setIsModalOpened(false);
     const updatedTaskList: ModalProps[] = Object.values(
-      getStatusTasksFromStorage(props.sectionName)
+      getTasksByStatus(props.sectionName)
     );
     setTasks(updatedTaskList);
   }
@@ -49,6 +50,7 @@ export default function TaskSection(props: TaskSectionProps) {
         isOpen={isOpen}
         onClose={handleClose}
         onUpdate={props.onUpdate}
+        onDelete={props.onDelete}
       />
     );
   }

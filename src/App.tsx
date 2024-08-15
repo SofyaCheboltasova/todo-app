@@ -6,27 +6,28 @@ import style from "./App.module.scss";
 import { Priority, Status } from "./entities";
 import {
   getRefactoredDate,
-  getStatusTasksFromStorage,
-  saveTaskToStorage,
+  getTasksByStatus,
+  postToStorage,
+  deleteFromStorage,
 } from "./utils";
 import { ModalProps } from "./components/Modal/Modal";
 import TaskSection from "./components/TaskSection/TaskSection";
 
 export default function App() {
   const [doneTasks, setDoneTasks] = useState<ModalProps[]>(
-    getStatusTasksFromStorage(Status.done)
+    getTasksByStatus(Status.done)
   );
   const [progressTasks, setProgressTasks] = useState<ModalProps[]>(
-    getStatusTasksFromStorage(Status.progress)
+    getTasksByStatus(Status.progress)
   );
   const [notStartedTasks, setNotStartedTasks] = useState<ModalProps[]>(
-    getStatusTasksFromStorage(Status.notStarted)
+    getTasksByStatus(Status.notStarted)
   );
 
   function updateLists(): void {
-    setDoneTasks([...getStatusTasksFromStorage(Status.done)]);
-    setProgressTasks([...getStatusTasksFromStorage(Status.progress)]);
-    setNotStartedTasks([...getStatusTasksFromStorage(Status.notStarted)]);
+    setDoneTasks([...getTasksByStatus(Status.done)]);
+    setProgressTasks([...getTasksByStatus(Status.progress)]);
+    setNotStartedTasks([...getTasksByStatus(Status.notStarted)]);
   }
 
   function getDefaultTask(status: Status): ModalProps {
@@ -44,7 +45,12 @@ export default function App() {
 
   function addNewTask(status: Status): void {
     const newTask = getDefaultTask(status);
-    saveTaskToStorage(newTask);
+    postToStorage(newTask);
+    updateLists();
+  }
+
+  function deleteTask(task: ModalProps): void {
+    deleteFromStorage(task);
     updateLists();
   }
 
@@ -56,18 +62,21 @@ export default function App() {
           tasks={doneTasks}
           onAddTask={addNewTask}
           onUpdate={updateLists}
+          onDelete={deleteTask}
         />
         <TaskSection
           sectionName={Status.progress}
           tasks={progressTasks}
           onAddTask={addNewTask}
           onUpdate={updateLists}
+          onDelete={deleteTask}
         />
         <TaskSection
           sectionName={Status.notStarted}
           tasks={notStartedTasks}
           onAddTask={addNewTask}
           onUpdate={updateLists}
+          onDelete={deleteTask}
         />
       </div>
     </section>

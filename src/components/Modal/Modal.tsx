@@ -7,11 +7,8 @@ import Select from "../Select/Select";
 import FormField from "../FormField/FormField";
 
 import { Priority, Status } from "../../entities";
-import {
-  getRemainingTime,
-  saveTaskToStorage,
-  updateTaskInStorage,
-} from "../../utils";
+import { getRemainingTime, postToStorage, putInStorage } from "../../utils";
+import Button, { ButtonProps } from "../Button/Button";
 
 export interface ModalProps {
   id: string;
@@ -21,6 +18,7 @@ export interface ModalProps {
   status: Status;
   dateEnd: string;
   isOpen: boolean;
+  onDelete?: (task: ModalProps) => void;
   onClose?: () => void;
   onUpdate?: () => void;
 }
@@ -29,8 +27,14 @@ export default function Modal(props: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const [task, setTask] = useState<ModalProps>(props);
   const [isOpened, setIsOpened] = useState<boolean>(props.isOpen);
-  const { onClose, onUpdate } = props;
+  const { onDelete, onClose, onUpdate } = props;
   const state = isOpened ? "opened" : "closed";
+
+  const buttonProps: ButtonProps = {
+    width: { short: true },
+    color: { unset: true },
+    onClick: () => {},
+  };
 
   useEffect(() => {
     onUpdate && onUpdate();
@@ -48,15 +52,25 @@ export default function Modal(props: ModalProps) {
     if (e.target === e.currentTarget && onClose) {
       setIsOpened(false);
       const updatedTask: ModalProps = getUpdatedTask();
-      saveTaskToStorage(updatedTask);
+      postToStorage(updatedTask);
       setTask(updatedTask);
     }
   }
 
   function handleSubmit<T>(key: keyof ModalProps, value: T): void {
     const updatedTask: ModalProps = getUpdatedTask(key, value);
-    updateTaskInStorage(updatedTask);
+    putInStorage(updatedTask);
     setTask(updatedTask);
+  }
+
+  function handleDelete() {
+    onDelete && onDelete(task);
+  }
+
+  function handleEdit() {
+    if (!isOpened) {
+      setIsOpened(true);
+    }
   }
 
   return (
@@ -125,6 +139,15 @@ export default function Modal(props: ModalProps) {
             label={"Expires in"}
             input={getRemainingTime(task.dateEnd)}
           />
+        </div>
+
+        <div className={getStyleClass("buttons")}>
+          <Button
+            {...buttonProps}
+            onClick={handleDelete}
+            type={{ del: true }}
+          />
+          <Button {...buttonProps} onClick={handleEdit} type={{ edit: true }} />
         </div>
       </div>
     </div>
