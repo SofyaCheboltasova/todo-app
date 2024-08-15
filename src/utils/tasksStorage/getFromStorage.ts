@@ -1,6 +1,5 @@
-import { ModalProps } from "../../components/Modal/Modal";
 import { Status } from "../../entities";
-import TaskStorage from "./TaskStorage";
+import { TaskProps, TaskStorage } from "./TaskStorage";
 
 export function getAllTasks(): TaskStorage {
   const storedTasks = localStorage.getItem("tasks");
@@ -15,7 +14,7 @@ export function getAllTasks(): TaskStorage {
   return tasks;
 }
 
-export function getTasksByStatus(status: Status): ModalProps[] {
+export function getTasksByStatus(status: Status): TaskProps[] {
   const storedTasks = localStorage.getItem("tasks");
   const tasks: TaskStorage = storedTasks
     ? JSON.parse(storedTasks)

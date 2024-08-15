@@ -1,10 +1,22 @@
-import { ModalProps } from "../../components/Modal/Modal";
-import { Status } from "../../entities";
+import { Priority, Status } from "../../entities";
+import getRefactoredDate from "../getRefactoredDate/getRefactoredDate";
 import { getAllTasks } from "./getFromStorage";
-import TaskStorage from "./TaskStorage";
+import { TaskStorage, TaskProps } from "./TaskStorage";
 
-export default function postToStorage(task: ModalProps) {
+import { v4 as uuidv4 } from "uuid";
+
+const defaultTask: TaskProps = {
+  id: "",
+  title: "",
+  description: "",
+  priority: Priority.high,
+  status: Status.notStarted,
+  dateEnd: getRefactoredDate(),
+};
+
+export default function postToStorage(status: Status): void {
   const tasks: TaskStorage = getAllTasks();
+  const task = { ...defaultTask, id: uuidv4(), status: status };
 
   switch (task.status) {
     case Status.notStarted:

@@ -1,9 +1,8 @@
-import { ModalProps } from "../../components/Modal/Modal";
 import { Status } from "../../entities/Status/Status";
 import { getAllTasks } from "./getFromStorage";
-import TaskStorage from "./TaskStorage";
+import { TaskProps, TaskStorage } from "./TaskStorage";
 
-export default function putInStorage(updatedTask: ModalProps) {
+export default function putInStorage(updatedTask: TaskProps): void {
   const tasks: TaskStorage = getAllTasks();
 
   const relatedTask =
