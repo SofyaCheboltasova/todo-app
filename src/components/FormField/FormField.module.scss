@@ -3,7 +3,7 @@
 
 .form__wrapper {
   width: 100%;
-  background-color: $color-main-dark;
+  background-color: transparent;
 
   &.labeled {
     @include grid(8rem minmax(8rem, auto), 1fr, 1rem, center);

@@ -18,14 +18,16 @@
   }
 }
 
+.closed * {
+  background-color: transparent;
+}
+
 .wrapper {
   @include flex(column, 0, space-between);
   @extend %box;
 
   width: 50vw;
   height: 80vh;
-
-  background-color: $color-main-dark;
 
   &.closed {
     @include grid(1fr, repeat(3, 1fr), 2rem);
@@ -41,6 +43,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 11;
+    background-color: $color-main-dark;
   }
 }
 
@@ -73,6 +76,10 @@
     align-items: center;
     width: 100%;
   }
+}
+
+.buttons {
+  @include flex(row, 1rem);
 }
 
 .hidden {
