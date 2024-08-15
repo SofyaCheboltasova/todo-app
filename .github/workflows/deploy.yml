@@ -44,6 +44,4 @@ jobs:
         uses: actions/deploy-pages@v1
         with:
           artifact_name: github-pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
