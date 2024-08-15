@@ -3,20 +3,18 @@ import style from "./TaskSection.module.scss";
 
 import Button, { ButtonProps } from "../Button/Button";
 import Modal, { ModalProps } from "../Modal/Modal";
-import { getTasksByStatus } from "../../utils";
 import { Status } from "../../entities";
+import { deleteFromStorage, postToStorage, TaskProps } from "../../utils";
 
 interface TaskSectionProps {
   sectionName: Status;
-  onAddTask: (status: Status) => void;
   onUpdate: () => void;
-  onDelete: (task: ModalProps) => void;
-  tasks?: ModalProps[];
+  tasks?: TaskProps[];
 }
 
 export default function TaskSection(props: TaskSectionProps) {
-  const [isModalOpened, setIsModalOpened] = useState<boolean>(false);
-  const [tasks, setTasks] = useState<ModalProps[] | undefined>(props.tasks);
+  const { sectionName, onUpdate } = props;
+  const [tasks, setTasks] = useState<TaskProps[] | undefined>(props.tasks);
 
   useEffect(() => {
     setTasks(props.tasks);
@@ -26,31 +24,26 @@ export default function TaskSection(props: TaskSectionProps) {
     type: { add: true },
     width: { wide: true },
     color: { unset: true },
-    onClick: () => props.onAddTask(props.sectionName),
+    onClick: handleAdd,
   };
 
-  function handleClose(): void {
-    setIsModalOpened(false);
-    const updatedTaskList: ModalProps[] = Object.values(
-      getTasksByStatus(props.sectionName)
-    );
-    setTasks(updatedTaskList);
+  function handleAdd(): void {
+    postToStorage(sectionName);
+    onUpdate();
   }
 
-  function getModalTag(task: ModalProps): React.ReactElement<ModalProps> {
-    const { id, title, description, priority, status, dateEnd, isOpen } = task;
+  function handleDelete(task: TaskProps): void {
+    deleteFromStorage(task);
+    onUpdate();
+  }
+
+  function getModalTag(task: TaskProps): React.ReactElement<ModalProps> {
     return (
       <Modal
-        id={id}
-        title={title}
-        description={description}
-        priority={priority}
-        status={status}
-        dateEnd={dateEnd}
-        isOpen={isOpen}
-        onClose={handleClose}
-        onUpdate={props.onUpdate}
-        onDelete={props.onDelete}
+        {...task}
+        isOpen={false}
+        onUpdate={onUpdate}
+        onDelete={handleDelete}
       />
     );
   }
@@ -64,15 +57,11 @@ export default function TaskSection(props: TaskSectionProps) {
   return (
     <>
       <section className={`${style.taskSection} ${colorTheme}`}>
-        <h2>{props.sectionName}</h2>
+        <h2>{sectionName}</h2>
         <Button {...addButtonProps} />
         <ul className={style.list}>
           {tasks &&
-            tasks.map((task) => (
-              <li key={task.id}>
-                {getModalTag({ ...task, isOpen: isModalOpened || false })}
-              </li>
-            ))}
+            tasks.map((task) => <li key={task.id}>{getModalTag(task)}</li>)}
         </ul>
       </section>
     </>
