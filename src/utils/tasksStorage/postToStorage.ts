@@ -3,8 +3,6 @@ import getRefactoredDate from "../getRefactoredDate/getRefactoredDate";
 import { getAllTasks } from "./getFromStorage";
 import { TaskStorage, TaskProps } from "./TaskStorage";
 
-import { v4 as uuidv4 } from "uuid";
-
 const defaultTask: TaskProps = {
   id: "",
   title: "",
@@ -14,9 +12,13 @@ const defaultTask: TaskProps = {
   dateEnd: getRefactoredDate(),
 };
 
+function generateUniqueId(): string {
+  return Math.random().toString(36).substr(2, 9);
+}
+
 export default function postToStorage(status: Status) {
   const tasks: TaskStorage = getAllTasks();
-  const task = { ...defaultTask, id: uuidv4(), status: status };
+  const task = { ...defaultTask, id: generateUniqueId(), status: status };
 
   switch (task.status) {
     case Status.notStarted:
@@ -34,4 +36,3 @@ export default function postToStorage(status: Status) {
   }
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
-
