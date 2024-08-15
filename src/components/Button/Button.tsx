@@ -2,12 +2,16 @@ import style from "./Button.module.scss";
 
 import add from "../../assets/Images/Add.png";
 import search from "../../assets/Images/Search.png";
+import del from "../../assets/Images/Delete.png";
+import edit from "../../assets/Images/Edit.png";
 
 export interface ButtonProps {
   onClick: () => void;
   type?: {
     search?: boolean;
     add?: boolean;
+    del?: boolean;
+    edit?: boolean;
   };
   width?: {
     short?: boolean;
@@ -21,13 +25,21 @@ export interface ButtonProps {
 }
 
 export default function Button(props: ButtonProps) {
+  const { onClick, type = {}, width = {}, color = {} } = props;
+
   function getButtonImg(): string {
-    if (props.type) {
-      if (props.type.search) {
+    if (type) {
+      if (type.search) {
         return search;
       }
-      if (props.type.add) {
+      if (type.add) {
         return add;
+      }
+      if (type.del) {
+        return del;
+      }
+      if (type.edit) {
+        return edit;
       }
     }
     return "";
@@ -35,20 +47,15 @@ export default function Button(props: ButtonProps) {
 
   const buttonClassNames: string = [
     style.button,
-    props.width?.short ? style.short : "",
-    props.width?.wide ? style.wide : "",
-    props.color?.light ? style.light : "",
-    props.color?.dark ? style.dark : "",
-    props.color?.unset ? style.unset : "",
+    width.short ? style.short : "",
+    width.wide ? style.wide : "",
+    color.light ? style.light : "",
+    color.dark ? style.dark : "",
+    color.unset ? style.unset : "",
   ].join(" ");
 
-  function handleClcik(e: React.MouseEvent<HTMLButtonElement>): void {
-    e.preventDefault();
-    props.onClick();
-  }
-
   return (
-    <button className={buttonClassNames} onClick={handleClcik}>
+    <button className={buttonClassNames} onClick={onClick}>
       <img src={getButtonImg()} className={style.button__img} />
     </button>
   );
