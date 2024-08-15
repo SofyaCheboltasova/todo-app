@@ -8,13 +8,21 @@
   cursor: pointer;
 
   &.short {
-    width: 3.5rem;
-    height: 3.5rem;
+    display: flex;
+
+    &:hover {
+      border: 1px solid #ffffff87;
+    }
   }
 
   &.wide {
     width: 100%;
     height: auto;
+
+    &:hover {
+      background-color: #ffffff42;
+      box-shadow: -4px 17px 18px rgba(0, 0, 0, 0.03);
+    }
   }
 
   &.light {
@@ -29,11 +37,6 @@
     background-color: transparent;
     border: 1px dotted $color-secondary-dark;
     transition: all 0.3s ease-in-out;
-
-    &:hover {
-      background-color: #ffffff42;
-      box-shadow: -4px 17px 18px rgba(0, 0, 0, 0.03);
-    }
   }
 }
 

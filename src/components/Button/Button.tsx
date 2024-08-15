@@ -2,8 +2,8 @@ import style from "./Button.module.scss";
 
 import add from "../../assets/Images/Add.png";
 import search from "../../assets/Images/Search.png";
-import del from "../../assets/Images/Delete.png";
-import edit from "../../assets/Images/Edit.png";
+import del from "../../assets/Images/Delete.svg";
+import edit from "../../assets/Images/Edit.svg";
 
 export interface ButtonProps {
   onClick: () => void;
