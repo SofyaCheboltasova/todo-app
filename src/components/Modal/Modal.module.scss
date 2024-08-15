@@ -49,7 +49,7 @@
 
 .header {
   &.opened {
-    @include grid(1fr, 1fr 3fr, 2rem);
+    @include grid(1fr, 1fr 3fr, 2rem, start);
     max-height: 50%;
   }
   &.closed {
@@ -85,4 +85,3 @@
 .hidden {
   display: none;
 }
-

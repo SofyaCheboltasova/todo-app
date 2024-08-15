@@ -5,28 +5,29 @@ import { getRefactoredDate } from "../../utils";
 
 interface InputProps {
   value: string;
-  type: "text" | "date";
   onSubmit: (value: string) => void;
   largeText?: boolean;
   darkText?: boolean;
+  type?: "textarea" | "date";
 }
 
 export default function Input(props: InputProps) {
+  const { type = "textarea", onSubmit } = props;
   const [value, setValue] = useState<string>(props.value);
-  const textareaRef = useRef<HTMLInputElement>(null);
+  const ref = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
 
   useEffect(() => {
     setValue(props.value);
   }, [props.value]);
 
   useEffect(() => {
-    const textareaElement = textareaRef.current;
-    textareaElement &&
-      textareaElement.addEventListener("keydown", handleKeyDown);
+    const element = ref.current;
+    element &&
+      element.addEventListener("keydown", handleKeyDown as EventListener);
 
     return () => {
-      textareaElement &&
-        textareaElement.removeEventListener("keydown", handleKeyDown);
+      element &&
+        element.removeEventListener("keydown", handleKeyDown as EventListener);
     };
   }, [value]);
 
@@ -39,32 +40,52 @@ export default function Input(props: InputProps) {
     return value.charAt(0).toUpperCase() + value.slice(1);
   }
 
-  function handleKeyDown(e: KeyboardEvent): void {
+  function handleKeyDown(e: KeyboardEvent) {
     if (e.key === "Enter" && !e.shiftKey) {
-      if (props.type === "text") {
-        props.onSubmit(capitalizeLetter());
+      if (type === "textarea") {
+        onSubmit(capitalizeLetter());
+        ref.current?.scrollTo({ top: 0 });
       }
-      textareaRef.current?.blur();
+      ref.current?.blur();
     }
   }
 
   function handleBlur(): void {
-    if (props.type === "date") {
-      props.onSubmit(getRefactoredDate(value));
+    if (type === "date") {
+      onSubmit(getRefactoredDate(value));
     }
-    textareaRef.current?.blur();
+    ref.current?.blur();
   }
 
-  return (
-    <input
-      ref={textareaRef}
-      value={value}
-      type={props.type}
-      placeholder={"Start typing"}
-      className={`${style.input} ${getStyleClass()}`}
-      onChange={(e) => setValue(e.target.value)}
-      onBlur={handleBlur}
-    />
-  );
-}
+  function getTag() {
+    switch (type) {
+      case "textarea": {
+        return (
+          <textarea
+            ref={ref as React.RefObject<HTMLTextAreaElement>}
+            value={value}
+            placeholder="Start typing"
+            className={`${style.input} ${getStyleClass()}`}
+            onChange={(e) => setValue(e.target.value)}
+            onBlur={handleBlur}
+          />
+        );
+      }
+      default: {
+        return (
+          <input
+            ref={ref as React.RefObject<HTMLInputElement>}
+            value={value}
+            type={type}
+            placeholder="Start typing"
+            className={`${style.input} ${getStyleClass()}`}
+            onChange={(e) => setValue(e.target.value)}
+            onBlur={handleBlur}
+          />
+        );
+      }
+    }
+  }
 
+  return getTag();
+}

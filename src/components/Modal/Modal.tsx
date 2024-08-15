@@ -72,7 +72,6 @@ export default function Modal(props: ModalProps) {
         <div className={getStyleClass("header")}>
           <Input
             value={task.title || "New task"}
-            type="text"
             onSubmit={(value: string) => handleChange("title", value)}
             largeText={isOpened}
             darkText={!isOpened}
@@ -80,7 +79,6 @@ export default function Modal(props: ModalProps) {
           {isOpened && (
             <Input
               value={task.description || "Description"}
-              type="text"
               onSubmit={(value: string) => handleChange("description", value)}
             />
           )}
