@@ -20,6 +20,10 @@
   padding: 0;
 }
 
+.modal {
+  border-radius: 5px;
+}
+
 .done {
   @include linear-shadow($color-done);
 }
@@ -31,4 +35,3 @@
 .notStarted {
   @include linear-shadow($color-notStarted);
 }
-
