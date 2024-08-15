@@ -7,28 +7,21 @@ import Select from "../Select/Select";
 import FormField from "../FormField/FormField";
 
 import { Priority, Status } from "../../entities";
-import { getRemainingTime, postToStorage, putInStorage } from "../../utils";
+import { getRemainingTime, putInStorage, TaskProps } from "../../utils";
 import Button, { ButtonProps } from "../Button/Button";
 
-export interface ModalProps {
-  id: string;
-  title: string;
-  description: string;
-  priority: Priority;
-  status: Status;
-  dateEnd: string;
+export interface ModalProps extends TaskProps {
   isOpen: boolean;
-  onDelete?: (task: ModalProps) => void;
-  onClose?: () => void;
-  onUpdate?: () => void;
+  onDelete: (task: TaskProps) => void;
+  onUpdate: () => void;
 }
 
 export default function Modal(props: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
-  const [task, setTask] = useState<ModalProps>(props);
+  const [task, setTask] = useState<TaskProps>(props);
   const [isOpened, setIsOpened] = useState<boolean>(props.isOpen);
-  const { onDelete, onClose, onUpdate } = props;
-  const state = isOpened ? "opened" : "closed";
+
+  const { onDelete, onUpdate } = props;
 
   const buttonProps: ButtonProps = {
     width: { short: true },
@@ -37,40 +30,30 @@ export default function Modal(props: ModalProps) {
   };
 
   useEffect(() => {
-    onUpdate && onUpdate();
+    onUpdate();
   }, [task]);
 
   function getStyleClass(className: string): string {
+    const state = isOpened ? "opened" : "closed";
     return `${style[className]} ${style[state]}`;
   }
 
-  function getUpdatedTask<T>(key?: keyof ModalProps, value?: T): ModalProps {
+  function getUpdatedTask<T>(key?: keyof ModalProps, value?: T): TaskProps {
     return key ? { ...task, [key]: value } : task;
   }
 
-  function handleClose(e: React.MouseEvent<HTMLElement>): void {
-    if (e.target === e.currentTarget && onClose) {
-      setIsOpened(false);
-      const updatedTask: ModalProps = getUpdatedTask();
-      postToStorage(updatedTask);
-      setTask(updatedTask);
-    }
-  }
-
   function handleSubmit<T>(key: keyof ModalProps, value: T): void {
-    const updatedTask: ModalProps = getUpdatedTask(key, value);
+    const updatedTask: TaskProps = getUpdatedTask(key, value);
     putInStorage(updatedTask);
     setTask(updatedTask);
   }
 
-  function handleDelete() {
-    onDelete && onDelete(task);
+  function handleDelete(): void {
+    onDelete(task);
   }
 
-  function handleEdit() {
-    if (!isOpened) {
-      setIsOpened(true);
-    }
+  function handleEdit(): void {
+    !isOpened && setIsOpened(true);
   }
 
   return (
@@ -78,7 +61,7 @@ export default function Modal(props: ModalProps) {
       {isOpened && (
         <div
           className={getStyleClass("background")}
-          onClick={handleClose}
+          onClick={() => setIsOpened(false)}
         ></div>
       )}
 
@@ -144,10 +127,10 @@ export default function Modal(props: ModalProps) {
         <div className={getStyleClass("buttons")}>
           <Button
             {...buttonProps}
-            onClick={handleDelete}
             type={{ del: true }}
+            onClick={handleDelete}
           />
-          <Button {...buttonProps} onClick={handleEdit} type={{ edit: true }} />
+          <Button {...buttonProps} type={{ edit: true }} onClick={handleEdit} />
         </div>
       </div>
     </div>

@@ -1,9 +1,18 @@
-import { ModalProps } from "../../components/Modal/Modal";
+import { Priority } from "../../entities";
 import { Status } from "../../entities/Status/Status";
 
-export type TaskType = Record<string, ModalProps>;
+export interface TaskProps {
+  id: string;
+  title: string;
+  description: string;
+  priority: Priority;
+  status: Status;
+  dateEnd: string;
+}
 
-export default interface TaskStorage {
+export type TaskType = Record<string, TaskProps>;
+
+export interface TaskStorage {
   [Status.done]: TaskType;
   [Status.progress]: TaskType;
   [Status.notStarted]: TaskType;
