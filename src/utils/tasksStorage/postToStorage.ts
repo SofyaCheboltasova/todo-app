@@ -1,10 +1,10 @@
 import { ModalProps } from "../../components/Modal/Modal";
 import { Status } from "../../entities";
-import { getAllTasksFromStorage } from "./getTasksFromStorage";
+import { getAllTasks } from "./getFromStorage";
 import TaskStorage from "./TaskStorage";
 
-export default function saveTaskToStorage(task: ModalProps) {
-  const tasks: TaskStorage = getAllTasksFromStorage();
+export default function postToStorage(task: ModalProps) {
+  const tasks: TaskStorage = getAllTasks();
 
   switch (task.status) {
     case Status.notStarted:
