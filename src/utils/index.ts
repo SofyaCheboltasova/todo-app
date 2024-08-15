@@ -1,17 +1,16 @@
 import getRemainingTime from "./getRemainingTime/getRemainingTime";
-import saveTaskToStorage from "./tasksStorage/saveTaskToStorage";
-import { updateTaskInStorage } from "./tasksStorage/updateTaskInStorage";
+import postToStorage from "./tasksStorage/postToStorage";
+import putInStorage from "./tasksStorage/putInStorage";
 import getRefactoredDate from "./getRefactoredDate/getRefactoredDate";
-import {
-  getAllTasksFromStorage,
-  getStatusTasksFromStorage,
-} from "./tasksStorage/getTasksFromStorage";
+import deleteFromStorage from "./tasksStorage/deleteFromStorage";
+import { getAllTasks, getTasksByStatus } from "./tasksStorage/getFromStorage";
 
 export {
   getRemainingTime,
-  getAllTasksFromStorage,
-  getStatusTasksFromStorage,
-  saveTaskToStorage,
-  updateTaskInStorage,
+  getAllTasks,
+  getTasksByStatus,
+  postToStorage,
+  putInStorage,
   getRefactoredDate,
+  deleteFromStorage,
 };
